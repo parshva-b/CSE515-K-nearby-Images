@@ -15,16 +15,6 @@ dataset, labelled_images = initialise_project()
 # where key is either label index as int (eg: faces is with index 0) or it is the label name as string
 # both are added to the map, user can decide which to use
 # value is the list of ids belonging to that category
-labelled_images = defaultdict(list)
-dataset_named_categories = dataset.categories
-def get_labelled_images(): 
-    for i in range(len(dataset)):
-        _, label = dataset[i]
-        # label returns the array index for dataset.categories
-        # labelled_images[str(label)].append(i)
-        category_name = dataset_named_categories[label]
-        labelled_images[i] = category_name
-    return labelled_images
 
 def query_query_top_k():
     # distance formula using cosine formula

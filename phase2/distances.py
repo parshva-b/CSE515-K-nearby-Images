@@ -5,6 +5,9 @@ def cosine_similarity(a, b):
     cos_sim = (np.dot(a, b)) / ((np.linalg.norm(a)) * np.linalg.norm(b))
     return cos_sim
 
+def cosine_distance(a,b):
+    return 1 - cosine_similarity(a,b)
+
 def cross_correlation_distance(a,b):
     cross_correlation = np.correlate(a,b,'valid')
     return cross_correlation[0]

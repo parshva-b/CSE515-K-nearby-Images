@@ -1,6 +1,5 @@
 data/
 **.pkl
-test.py
 **/bin
 **/lib
 **/include
@@ -10,3 +9,5 @@ test.py
 **/share
 **/__pycache__
 **/.DS_Store
+test*
+phase2/

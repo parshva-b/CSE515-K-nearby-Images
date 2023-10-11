@@ -1,5 +1,6 @@
 import mongo_connection
 from bson.json_util import dumps
+import json
 
 def get_collection(collection_name):
     db = mongo_connection.get_database()
@@ -9,6 +10,7 @@ def get_collection(collection_name):
 def convert_to_json(cursor):
     list_cur = list(cursor)
     json_data = dumps(list_cur, indent = 2)
+    json_data = json.loads(json_data)
     return json_data
 
 def query(collection_name, imageID):

@@ -6,8 +6,23 @@ import torchvision
 import torch
 from matplotlib import pyplot
 from torchvision import datasets
-from ordered_set import OrderedSet
+# from ordered_set import OrderedSet
 from PIL import Image
+
+feature_model  = {
+    1 : "color_moments",
+    2 : "hog",
+    3 : "avgpool_layer",
+    4 : "layer3",
+    5 : "fc_layer"
+}
+
+latent_semantics = {
+    1 : "SVD",
+    2 : "NNMF",
+    3 : "LDA",
+    4 : "K_means"
+}
 
 def int_input(default_value: int = 99) -> int:
     try:
@@ -53,6 +68,16 @@ def initialise_project():
         labelled_images[category_name].append(i)
     return (dataset, labelled_images)
 
+def get_image_categories():
+    dataset = torchvision.datasets.Caltech101(root='./data', download=True, target_type='category')
+    labelled_images = defaultdict(list)
+    dataset_named_categories = dataset.categories 
+    for i in range(len(dataset)):
+        _, label = dataset[i]
+        category_name = dataset_named_categories[label]
+        labelled_images[i] = category_name
+    return labelled_images
+
 def display_image_og(pil_img)->Image:
     pil_img.show()
     return pil_img
@@ -94,6 +119,45 @@ def display_k_images_subplots(dataset: datasets.Caltech101, distances: tuple, ti
                 fig.delaxes(axs[i,j])
     # pyplot.title(title)
     pyplot.show()
+
+def get_user_selected_feature_model(): 
+    """This is a helper code which prints all the available fearure options and takes input from the user"""
+    print('Select your option:\
+        \n\n\
+        \n1. Color Moments\
+        \n2. Histogram of Oriented gradients\
+        \n3. RESNET-50 Layer3\
+        \n4. RESNET-50 Avgpool\
+        \n5. RESNET-50 FC\
+        \n\n')
+    option = int_input()
+    model_space = None
+    match option:
+        case 1: model_space = torch.load('color_moments.pkl')
+        case 2: model_space = torch.load('hog.pkl') 
+        case 3: model_space = torch.load('layer3_vectors.pkl') 
+        case 4: model_space = torch.load('fc_layer_vectors.pkl') 
+        case 5: model_space = torch.load('fc_layer_vectors.pkl') 
+        case default: print('No matching input was selected')
+    return model_space, option
+
+def get_user_input_k():
+    """Helper function to be used in other functions to take input from user for K"""
+    print("Please enter the value of K : ")
+    value = int_input()
+    return value
+
+def get_user_selected_dim_reduction():
+    """This is a helper code which prints all the available Dimension reduction options and takes input from the user"""
+    print('Select your option:\
+        \n\n\
+        \n1. SVD - Singular Value Decomposition\
+        \n2. NNMF - Non Negative Matrix Factorization\
+        \n3. LDA - Latent Dirichlet Allocation\
+        \n4. K - Means\
+        \n\n')
+    option = int_input()
+    return option
 
 
 def label_feature_descriptor_fc(): 

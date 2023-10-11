@@ -1,6 +1,6 @@
 import mongo_connection
 import pickle
-import main
+import utils
 import torch
 
 def read_file(filename):
@@ -31,7 +31,7 @@ def combine_data(filename, labelled_data):
     return data
 
 def process():
-    labelled_data = main.get_labelled_images()
+    labelled_data = utils.get_image_categories()
     # avgpool vectors
     data = combine_data("CSE515_PKL_Files/avgpool_vectors.pkl", labelled_data)
     upsert_data("avgpool", data)
