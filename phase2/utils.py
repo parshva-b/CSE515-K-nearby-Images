@@ -38,6 +38,13 @@ latent_semantics = {
     4 : "K_means"
 }
 
+latent_features = {
+    1 : "LS1",
+    2 : "LS2",
+    3 : "LS3",
+    4 : "LS4"
+}
+
 def int_input(default_value: int = 99) -> int:
     try:
         inpu = int(input())
@@ -94,6 +101,27 @@ def initialise_project():
         category_name = dataset_named_categories[label]
         labelled_images[category_name].append(i)
     return (dataset, labelled_images)
+
+def get_labels():
+    dataset = torchvision.datasets.Caltech101(root='./data', download=True, target_type='category')
+    dataset_named_categories = dataset.categories
+    return dataset_named_categories
+
+def print_labels():
+    labels = get_labels()
+    num_columns = 8
+    num_rows = (len(labels) + num_columns - 1) // num_columns
+    print('Available Labels in the Dataset : \
+        \n\n')
+    for row in range(num_rows):
+        for col in range(num_columns):
+            index = row * num_columns + col
+            if index < len(labels):
+                print(f'{index + 1}: {labels[index]:3}', end='\t')
+        print()  # Move to the next row
+    print('\n\n select a label here : \
+        \n\n')
+    return labels
 
 def get_image_categories():
     dataset = torchvision.datasets.Caltech101(root='./data', download=True, target_type='category')
@@ -356,3 +384,51 @@ def convert_image_to_grayscale(image):
     cv2_image = np.array(gray_image)
 
     return cv2_image
+
+def label_feature_descriptor_fc(): 
+
+    '''
+    Loads data from pickle file that contains RESNET FC feature vector along with label id and name for each image. 
+    Format of the pickle file : {'id': 8676, 'label_id': 100, 'label': 'yin_yang', 'ResnetFC': tensor([])}
+    Total 101 labels from 0 to 100
+    This is to be replaced by data from DB
+    '''
+    
+    #Loading data
+    fc_with_labels = torch.load('fc_labels.pkl')
+
+    #Stores info of every label in form of a dictionary and appends all the entries to a list 
+    list_of_label_dictionaries = []
+    
+    #Gets all the unique label names and the number of labels from the data in ordered format
+    labels = list(OrderedSet([entry['label'] for entry in fc_with_labels]))
+    number_of_labels = len(labels)
+    
+    #For all the images of a label_id create dictionary containing label_id, label and label feature descriptor
+    #Append the dictionary in to a list 
+    for label_id in range(number_of_labels):
+        
+        label_dict = {}
+        
+        #Creates a list of all the feature vectors for a particular label id
+        label_feature_descriptors = [ entry['ResnetFC'].flatten() for entry in fc_with_labels if entry['label_id'] == label_id ]
+        
+        #Stacks into one tensor and takes mean to ouput a label feature descriptor
+        label_super_descriptor = torch.stack(label_feature_descriptors).mean(0)
+        
+        #Create the dictionary with details about the label and append to list
+        label_dict['label_id'] = label_id 
+        label_dict['label'] = labels[label_id]
+        label_dict['label_feature'] = label_super_descriptor
+        
+        list_of_label_dictionaries.append(label_dict)
+    
+    
+    #Saving to a pkl file 
+    torch.save(list_of_label_dictionaries,'fc_labels_mean.pkl')
+def get_user_input_latent_feature():
+    print("Select Latent Features from list below")
+    for feature in latent_features:
+        print(f"\t {feature} :  {latent_features[feature]}")
+    latent_feature = int_input()
+    return latent_features[latent_feature]

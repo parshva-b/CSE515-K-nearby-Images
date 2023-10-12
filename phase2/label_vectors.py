@@ -44,6 +44,33 @@ def create_labelled_feature_vectors(labelled_images, task2bSpecific: bool = Fals
     else:
         model_space, option, dbName = get_user_selected_feature_model()
     # print(f'Model space shape {model_space.shape}')
+def get_label_vector_for_selected_feature(feature):
+    
+    return
+
+# this function is responsible to create feature vector for each label
+def create_labelled_feature_vectors(labelled_images):
+    '''
+    labelled_images from map -> label_id : [images_ids]
+    output format: [dict[key: label, value: feature_vector_label], model_space]
+    '''    
+    print('Select your option:\
+        \n\n\
+        \n1. Color Moments\
+        \n2. Histogram of Oriented gradients\
+        \n3. RESNET-50 Layer3\
+        \n4. RESNET-50 Avgpool\
+        \n5. RESNET-50 FC\
+        \n\n')
+    option = int_input()
+    model_space = None
+    match option:
+        case 1: model_space = torch.load('color_moments.pkl')
+        case 2: model_space = torch.load('hog.pkl') 
+        case 3: model_space = torch.load('layer3_vectors.pkl') 
+        case 4: model_space = torch.load('resnet_fc.pkl') 
+        case 5: model_space = torch.load('avgpool_vectors.pkl') 
+        case default: print('No matching input was selected')
     if model_space is not None:
         labelled_feature_vectors = {}
         for key in labelled_images.keys():
