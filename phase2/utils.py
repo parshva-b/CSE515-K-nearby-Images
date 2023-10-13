@@ -117,7 +117,7 @@ def print_labels():
         for col in range(num_columns):
             index = row * num_columns + col
             if index < len(labels):
-                print(f'{index + 1}: {labels[index]:3}', end='\t')
+                print(f'{index}: {labels[index]:3}', end='\t')
         print()  # Move to the next row
     print('\n\n select a label here : \
         \n\n')
