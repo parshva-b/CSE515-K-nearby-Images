@@ -38,13 +38,6 @@ latent_semantics = {
     4 : "K_means"
 }
 
-latent_features = {
-    1 : "LS1",
-    2 : "LS2",
-    3 : "LS3",
-    4 : "LS4"
-}
-
 def int_input(default_value: int = 99) -> int:
     try:
         inpu = int(input())
@@ -101,27 +94,6 @@ def initialise_project():
         category_name = dataset_named_categories[label]
         labelled_images[category_name].append(i)
     return (dataset, labelled_images)
-
-def get_labels():
-    dataset = torchvision.datasets.Caltech101(root='./data', download=True, target_type='category')
-    dataset_named_categories = dataset.categories
-    return dataset_named_categories
-
-def print_labels():
-    labels = get_labels()
-    num_columns = 8
-    num_rows = (len(labels) + num_columns - 1) // num_columns
-    print('Available Labels in the Dataset : \
-        \n\n')
-    for row in range(num_rows):
-        for col in range(num_columns):
-            index = row * num_columns + col
-            if index < len(labels):
-                print(f'{index}: {labels[index]:3}', end='\t')
-        print()  # Move to the next row
-    print('\n\n select a label here : \
-        \n\n')
-    return labels
 
 def get_image_categories():
     dataset = torchvision.datasets.Caltech101(root='./data', download=True, target_type='category')
@@ -426,6 +398,12 @@ def label_feature_descriptor_fc():
     
     #Saving to a pkl file 
     torch.save(list_of_label_dictionaries,'fc_labels_mean.pkl')
+def get_user_input_latent_feature():
+    print("Select Latent Features from list below")
+    for feature in latent_features:
+        print(f"\t {feature} :  {latent_features[feature]}")
+    latent_feature = int_input()
+    return latent_features[latent_feature]
 def get_user_input_latent_feature():
     print("Select Latent Features from list below")
     for feature in latent_features:
