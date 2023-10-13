@@ -15,9 +15,12 @@ class task3:
         data, feature, dbName = utils.get_user_selected_feature_model()
         k = utils.get_user_input_k()
         ls_option = utils.get_user_selected_dim_reduction()
-
+        
         # V -Input matrix with all the even images
         V = np.array(data)
+        V = utils.convert_higher_dims_to_2d(V)
+        
+        print(V.shape)
         match ls_option:
             case 1: W, _, _ = dr.svd(V, k)
             case 2: W, _ = dr.nmf_als(V, k)

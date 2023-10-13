@@ -62,6 +62,7 @@ def convert_higher_dims_to_2d(data_collection: np.ndarray) -> np.ndarray:
 
 # for query image id, return label name for it
 def name_for_label_index(dataset: torchvision.datasets.Caltech101, index: int) -> str:
+    print(index)
     dataset_named_categories = dataset.categories
     return dataset_named_categories[index]
 
@@ -210,7 +211,8 @@ def get_user_input_for_saved_files(option: int):
         for i in range(len(onlyfiles)):
             print(f'{i} -> {onlyfiles[i]}')
         print('\n')
-        return '.' + base_path + '/' + onlyfiles[i]
+        index = int_input(0)
+        return '.' + base_path + '/' + onlyfiles[index]
 
 def get_user_input_latent_semantics():
     """

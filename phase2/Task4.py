@@ -15,18 +15,18 @@ class task4:
 
         print("*"*25 + " Task 4 "+ "*"*25)
         print("Please select from below mentioned options")
-        data, feature = utils.get_user_selected_feature_model()
+        data, feature, dbName = utils.get_user_selected_feature_model()
         k = utils.get_user_input_k()
         data = monogo_query.get_entire_collection(utils.feature_model[feature])
-        val = []
-        i=0
-        for key in range(0,8677,2):
-            data[key]["imageID"] = i
-            val.append(data[key])
-            i += 1
+        # val = []
+        # i=0
+        # for key in range(0,8677,2):
+        #     data[key]["imageID"] = i
+        #     val.append(data[key])
+        #     i += 1
         # val.append(data[key] for key in range(0, 8677, 2))
 
-        data = self.get_tensor(val)
+        data = self.get_tensor(data)
         print(len(data))
         factors = dr.cp_decompose(data,k)
         print(factors[0])
