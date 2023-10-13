@@ -18,7 +18,6 @@ class Task8:
         imageID, img = utils.get_user_input_internalexternal_image()
         pathname, option = utils.get_user_input_latent_semantics()
         k = utils.get_user_input_k()
-        print(pathname, option, k)
         feature_data = torch.load(pathname)
 
         if imageID % 2 !=0 and imageID != -1:
@@ -26,18 +25,20 @@ class Task8:
             run_model = resnet.run_model(img)
             feature_descriptor = resnet.resnet_fc_layer()
             imageID = self.get_closest_image_id(feature_descriptor)
-            print(imageID)
         elif imageID == -1:
             run_model = resnet.run_model(img)
             feature_descriptor = resnet.resnet_fc_layer()
             imageID = self.get_closest_image_id(feature_descriptor)
 
-        print(option)
         if option == 1 or option == 4:
             result = self.distance_function_labels_from_images(feature_data[int(imageID/2)], feature_data, k)
+        elif option == 2:
+            feature_data = feature_data[1][2]
+            _, label = self.dataset[imageID]
+            result = self.distance_function_for_images_labels(feature_data[int(label)], feature_data, k)
+            
         else:
             _, label = self.dataset[imageID]
-            print(label)
             result = self.distance_function_for_images_labels(feature_data[int(label)], feature_data, k)
         
         print(result)
@@ -52,7 +53,6 @@ class Task8:
 
         # Get the entire dataset to find the closest even image
         db_data = mongo_query_np.get_all_feature_descriptor(utils.feature_model[5])
-        print(input_image_vector.shape)
         output = self.distance_function_for_images_images(input_image_vector, db_data, 1)
         closest_image_id = output[0][0]
         return closest_image_id

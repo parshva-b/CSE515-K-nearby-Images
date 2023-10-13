@@ -27,6 +27,9 @@ class Task5:
                     label_label_similarity_matrix[i][j] = distances.kl_divergence(labelled_feature_descriptor[i], labelled_feature_descriptor[j])
                 else:
                     label_label_similarity_matrix[i][j] = distances.cosine_similarity(labelled_feature_descriptor[i], labelled_feature_descriptor[j])
+        path =  str("./LatentSemantics/LS4/label_label_similarity_matrix_" + feature_model[option]) + ".pkl"
+        torch.save(label_label_similarity_matrix, path)
+        print("Output file for label-label similarity matrix is saved with name - " + path)
         
         return label_label_similarity_matrix, option
         # print(labelled_feature_vectors.shape)
